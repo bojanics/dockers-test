@@ -1,4 +1,4 @@
-FROM sasatestcr.azurecr.io/test-afn
+FROM sasatestcr.azurecr.io/test-afn:3179
 
 # Chromium dependencies
 RUN apt-get update -yq \
