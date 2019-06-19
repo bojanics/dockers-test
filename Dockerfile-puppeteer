@@ -13,4 +13,4 @@ dpkg -i dumb-init_*.deb && rm -f dumb-init_*.deb && \
 apt-get clean && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /home/site/wwwroot
-RUN npm install --no-save puppeteer
+CMD ["npm install --no-save puppeteer"]
