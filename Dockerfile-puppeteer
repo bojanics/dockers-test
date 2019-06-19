@@ -13,4 +13,19 @@ dpkg -i dumb-init_*.deb && rm -f dumb-init_*.deb && \
 apt-get clean && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /home/site/wwwroot
-CMD ["npm install --no-save puppeteer"]
+
+# SSH
+COPY sshd_config /etc/ssh/
+ENV SSH_PASSWD "root:Docker!"
+RUN apt-get update \
+        && apt-get install -y --no-install-recommends dialog \
+        && apt-get update \
+    && apt-get install -y --no-install-recommends openssh-server \
+    && echo "$SSH_PASSWD" | chpasswd 
+    
+EXPOSE 8000 2222
+
+COPY start2.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/start2.sh
+
+CMD ["start.sh"]
