@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta charset="utf-8" />
+		<title>Broker_Profile_final</title>
+        <link id="layoutstyle" href="./css/liqbpstyle.css" rel="stylesheet"> 
+	</head>
+
+	<body lang="de-DE">
+			
+{% for person in persons %}    
+			<div class="view-wrapper" style="page-break-before: always;">
+			<div class="bp-rectangle-wrapper">
+				<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveaspectratio="xMidYMid meet" viewbox="0 0 640 640" width="640" height="640"><defs><path d="M-318.96 336.75L-17.82 -156.62L229.57 -5.62L-71.57 487.75L-318.96 336.75Z" id="dliubNRN7"></path><path d="M-117.42 -153.43L488.2 -286.15L548.82 -9.52L-56.8 123.21L-117.42 -153.43Z" id="cUJFl6MN"></path></defs><g><g><g><use xlink:href="#dliubNRN7" opacity="0.5" fill="#d7dde0" fill-opacity="1"></use></g><g><use xlink:href="#cUJFl6MN" opacity="0.5" fill="#d7dde0" fill-opacity="1"></use></g></g></g></svg>
+			</div>
+			<div class="header-wrapper">
+				<div class="greco-logo">
+					<img src="./img/GrECo_Logo_CMYK_Vektor.png" alt="">
+				</div>
+				<div class="headline-title">{{ person.Country }}</div>
+			</div>
+			<div class="head-info-wrapper">
+				<div class="head-profile-image"><img src="./img/{{ person.Email }}.png" width='232' height='232'></div>
+				<div class="head-info">
+					<span class="head-info-name"></span>
+					<span></span>
+					<!-- <span>in Central Account Management</span> -->
+					<span></span>
+					<span>{{ person.Email }}</span>	
+				</div>
+			</div>
+			<div class="bp-lvls bp-lvl-1">
+				<div class="bp-desc-blue">
+					GrECo nova
+					<br>
+					Partner
+				</div>
+				<div class="flex-column">
+					<span>{{ person.Company }}</span>
+					<span></span>
+					<span></span>
+					<!--<span>Elmargasse 2-4, 1190 Vienna, Austria</span>
+					<span>+43 504 04 100</span>
+					<span>office@greco.at</span>
+					<span>www.greco-jlt.at</span>-->
+				</div>
+			</div>
+			<div class="bp-lvls bp-lvl-2">
+					<div>Offices</div>
+					<div>
+						<span>{{ person.Offices }}</span>
+					</div>
+			</div>
+			<div class="bp-lvls bp-lvl-3">
+					<div>Year incorporated</div>
+					<div>
+						<span>{{ person.Yearincorporated }}</span>
+					</div>
+			</div>
+			<div class="bp-lvls bp-lvl-4">
+					<div>Employees</div>
+					<div>
+						<span>{{ person.Employees }}</span>
+					</div>
+			</div>
+			<div class="bp-lvls bp-lvl-5">
+					<div>Premium mEUR</div>
+					<div>
+						<span>{{ person.PlacedPremiuminmillionEUR }}</span>
+					</div>
+			</div>
+			<div class="bp-lvls bp-lvl-6">
+					<div class="bp-desc-blue">General Information</div>
+					<div>
+						<span></span>
+					</div>
+			</div>
+			<div class="bp-lvls bp-lvl-7">
+					<div>Summary</div>
+					<div class="sum-class">
+						<span>{{ person.Summary }}</span>
+					</div>
+			</div>
+			<div class="bp-lvls bp-lvl-8">
+					<div>Expertise</div>
+					<div>
+						<span>{{ person.Expertise }}</span>
+					</div>
+			</div>
+			<div class="bp-lvls bp-lvl-9">
+					<div>Industries</div>
+					<div>
+						<span>{{ person.Industries }}</span>
+					</div>
+			</div>
+			</div>
+{% endfor %}            
+				
+	</body>
+
+</html>

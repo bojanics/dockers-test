@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+   <head>
+      <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10" />
+   </head>
+   <body onLoad="history.forward(1)">
+      <h1>TravelWizardApplication</h1>
+         <fieldset>
+            <legend>${ChooseTravelTour}</legend>
+
+            <label>${LodgingType}</label>
+            <select name="travel_type" required="required" placeholder="${LodgingTypeHelpMessage}">
+               <option value="LodgingTypeIn">
+                  ${LodgingTypeIn}
+               </option>
+               <option value="LodgingTypeHostel">
+                  ${LodgingTypeHostel}
+               </option>
+               <option value="LodgingTypeHotel34">
+                  ${LodgingTypeHotel34}
+               </option>
+               <option value="LodgingTypeHotel5">
+                  ${LodgingTypeHotel5}
+               </option>
+            </select>
+            <label>${Transportation}</label>
+            <select name="travel_vehicle" required="required" placeholder="{$TransportationHelpMessage}">
+               <option value="TransportationBus">
+                  ${TransportationBus}
+               </option>
+               <option value="TransportationTrain">
+                  ${TransportationTrain}
+               </option>
+               <option value="TransportationPlane">
+                  ${TransportationPlane}
+               </option>
+               <option value="TransportationShip">
+                  ${TransportationShip}
+               </option>
+            </select>
+
+            <label>${StartDate}</label>
+            <input id="start_date" readonly="readonly" name="start_date" type="text" placeholder="${StartDateHelpMessage}" value=""/>
+
+            <label>${EndDate}</label>
+            <input id="end_date" readonly="readonly" name="end_date" type="text" placeholder="${EndDateHelpMessage}" value=""/>
+         </fieldset>
+         <fieldset>
+            <button type="submit" formaction="WizardPO.po?event=complete">${Continue}</button> 
+         </fieldset>
+         <image src="./img/tourist.png" style="float: left;"/>
+   </body>
+</html>
