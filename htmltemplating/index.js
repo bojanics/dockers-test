@@ -12,9 +12,9 @@ const RESPONSE_TYPE_IMAGE = "image";
 const PDF_OPTIONS_DEFAULT = {printBackground: true};
 const IMAGE_OPTIONS_DEFAULT = {};
 
-const PARAM_NAME_HTML_URL = "htmlUrl";
-const PARAM_NAME_HTML_TEMPLATE = "htmlTemplate";
-const PARAM_NAME_HTML_CONTENT = "htmlContent";
+const PARAM_NAME_HTML_TEMPLATE_URL  = "htmlTemplateUrl";
+const PARAM_NAME_HTML_TEMPLATE_LOCAL = "htmlTemplateLocal";
+const PARAM_NAME_HTML_TEMPLATE_CONTENT = "htmlTemplateContent";
 const PARAM_NAME_RESPONSE_TYPE = "responseType";
 const PARAM_NAME_DATA = "data"; 
 const PARAM_NAME_OPTIONS = "options";
@@ -26,9 +26,9 @@ const ENVIRONMENT_PRODUCTION = "p";
 
 module.exports = async function (context, req) {
     context.log("HTML processing started...");
-    var htmlTemplate = null;
-    var htmlUrl = null;
-    var htmlContent = null;
+    var htmlTemplateLocal = null;
+    var htmlTemplateUrl = null;
+    var htmlTemplateContent = null;
     var data = null;
     var responseType = null;
     var options = null;
@@ -38,22 +38,22 @@ module.exports = async function (context, req) {
 
     try {
         // first try to read query parameters
-        htmlTemplate = req.query[PARAM_NAME_HTML_TEMPLATE];
-        htmlUrl = req.query[PARAM_NAME_HTML_URL];
+        htmlTemplateLocal = req.query[PARAM_NAME_HTML_TEMPLATE_LOCAL];
+        htmlTemplateUrl = req.query[PARAM_NAME_HTML_TEMPLATE_URL ];
         responseType = req.query[PARAM_NAME_RESPONSE_TYPE];
         
         // if there is a body (POST request), and if there were not query parameters, try to read them from the body, and also read other possible parameters
         if (req.body) {
-            if (htmlTemplate==null) {
-                htmlTemplate = req.body[PARAM_NAME_HTML_TEMPLATE];
+            if (htmlTemplateLocal==null) {
+                htmlTemplateLocal = req.body[PARAM_NAME_HTML_TEMPLATE_LOCAL];
             }
-            if (htmlUrl==null) {
-                htmlUrl = req.body[PARAM_NAME_HTML_URL];
+            if (htmlTemplateUrl==null) {
+                htmlTemplateUrl = req.body[PARAM_NAME_HTML_TEMPLATE_URL ];
             }
             if (responseType==null) {
                 responseType = req.body[PARAM_NAME_RESPONSE_TYPE];
             }
-            htmlContent = req.body[PARAM_NAME_HTML_CONTENT];
+            htmlTemplateContent = req.body[PARAM_NAME_HTML_TEMPLATE_CONTENT];
             options = req.body[PARAM_NAME_OPTIONS];
             
             data = req.body[PARAM_NAME_DATA];
@@ -85,11 +85,11 @@ module.exports = async function (context, req) {
         } catch(e){
             dataforlog = data;
         }
-        context.log("html will be processed and result will be returned based on parameters [responseType="+responseType+", htmlTemplate="+htmlTemplate+",htmlUrl="+htmlUrl+",htmlContent="+htmlContent+",options="+optionsforlog+",data="+dataforlog+"]"+"...");
+        context.log("html will be processed and result will be returned based on parameters [responseType="+responseType+", htmlTemplateLocal="+htmlTemplateLocal+",htmlTemplateUrl="+htmlTemplateUrl+",htmlTemplateContent="+htmlTemplateContent+",options="+optionsforlog+",data="+dataforlog+"]"+"...");
                 
         var outputContent = null;
         var contentType = null;
-        if ((htmlTemplate!=null || htmlUrl!=null || htmlContent!=null) && (responseType===RESPONSE_TYPE_HTML || responseType===RESPONSE_TYPE_IMAGE || responseType===RESPONSE_TYPE_PDF)) {
+        if ((htmlTemplateLocal!=null || htmlTemplateUrl!=null || htmlTemplateContent!=null) && (responseType===RESPONSE_TYPE_HTML || responseType===RESPONSE_TYPE_IMAGE || responseType===RESPONSE_TYPE_PDF)) {
             if (responseType===RESPONSE_TYPE_HTML) {
                 contentType = "text/html; charset=utf-8";
             } else if (responseType===RESPONSE_TYPE_PDF) {
@@ -102,22 +102,22 @@ module.exports = async function (context, req) {
                 }
             }
             const engine = new Liquid();
-            if (htmlTemplate!=null) {
-                context.log("...getting htmlTemplate "+htmlTemplate);
-                htmlTemplate = path.resolve(__dirname, htmlTemplate);
-                context.log("...using liquid engine to process HTML from template "+htmlTemplate);
-                outputContent = await engine.renderFile(htmlTemplate,data);
-            } else if (htmlUrl!=null) {
-                context.log("...fetching htmlUrl "+htmlUrl);
-                const response = await fetch(htmlUrl);
+            if (htmlTemplateLocal!=null) {
+                context.log("...getting htmlTemplateLocal "+htmlTemplateLocal);
+                htmlTemplateLocal = path.resolve(__dirname, htmlTemplateLocal);
+                context.log("...using liquid engine to process HTML from template "+htmlTemplateLocal);
+                outputContent = await engine.renderFile(htmlTemplateLocal,data);
+            } else if (htmlTemplateUrl!=null) {
+                context.log("...fetching htmlTemplateUrl "+htmlTemplateUrl);
+                const response = await fetch(htmlTemplateUrl);
                 outputContent = await response.text();
-                context.log("...using liquid engine to process HTML from url "+htmlUrl);
+                context.log("...using liquid engine to process HTML from url "+htmlTemplateUrl);
                 outputContent = engine.parse(outputContent);
                 outputContent = await engine.render(outputContent,data);
-            } else if (htmlContent!=null) {
-                context.log("...parsing htmlContent "+htmlContent);
-                outputContent = engine.parse(htmlContent);
-                context.log("...using liquid engine to process HTML content "+htmlContent);
+            } else if (htmlTemplateContent!=null) {
+                context.log("...parsing htmlTemplateContent "+htmlTemplateContent);
+                outputContent = engine.parse(htmlTemplateContent);
+                context.log("...using liquid engine to process HTML content "+htmlTemplateContent);
                 outputContent = await engine.render(outputContent,data);
             }
             var env = process.env[APP_SETTING_ENVIRONMENT];
@@ -138,12 +138,12 @@ module.exports = async function (context, req) {
                 
                 context.log("...creating puppeteer new page"+"...");
                 const page = await browser.newPage();
-                if (htmlTemplate!=null) {
+                if (htmlTemplateLocal!=null) {
                     if (false) {
                         // This is initial implementation to resolve relative paths...the idea was to write temporary file to the filesystem, however, it is much slower than the 2nd option in else block
-                        var bn = path.basename(htmlTemplate);
+                        var bn = path.basename(htmlTemplateLocal);
                         var uuid = uuidv4()
-                        var tempHtml = path.dirname(htmlTemplate)+"/temp_"+bn.substring(0,bn.length-path.extname(htmlTemplate).length)+"_"+uuid+".html";
+                        var tempHtml = path.dirname(htmlTemplateLocal)+"/temp_"+bn.substring(0,bn.length-path.extname(htmlTemplateLocal).length)+"_"+uuid+".html";
                         context.log("Writting temporary HTML file to "+tempHtml);
                         fs.writeFileSync(tempHtml,outputContent);
                         context.log("...file written to "+tempHtml);                
@@ -152,14 +152,14 @@ module.exports = async function (context, req) {
                     } else {
                         // The following line is written so that the relative paths are properly resolved...however, we don't need to wait for the page to load
                         // If we don't do that, we would have to execute the code above instead this 2 lines of code, and it is much slower
-                        await page.goto("file:///"+htmlTemplate); 
+                        await page.goto("file:///"+htmlTemplateLocal); 
                         await page.setContent(outputContent);
                     }
                 } else {
                     context.log("...setting puppeteer content, content size = "+outputContent.length);
-                    if (htmlUrl!=null) {
+                    if (htmlTemplateUrl!=null) {
                         // The following line is written so that the relative paths are properly resolved...however, we don't need to wait for the page to load
-                        await page.goto(htmlUrl);
+                        await page.goto(htmlTemplateUrl);
                     }
                     await page.setContent(outputContent);
                 }                
@@ -184,13 +184,13 @@ module.exports = async function (context, req) {
         } else {    
             context.res = {
                 status: 400,
-                body: "Failed to process html, "+(htmlTemplate==null&&htmlUrl==null&&htmlContent==null ? "non of htmlTemplate, htmlUrl, htmlContent parameters are not specified!" : "invalid responseType parameter value")
+                body: "Failed to process html, "+(htmlTemplateLocal==null&&htmlTemplateUrl==null&&htmlTemplateContent==null ? "non of htmlTemplateLocal, htmlTemplateUrl, htmlTemplateContent parameters are not specified!" : "invalid responseType parameter value")
             };
         }
     } catch (e) {
         context.res = {
             status: 500,
-            body: "Failed to process html based on parameters [responseType="+responseType+", htmlTemplate="+htmlTemplate+",htmlUrl="+htmlUrl+",htmlContent="+htmlContent+",options="+optionsforlog+",data="+dataforlog+"]"+". Error name="+e.name+", Error message: "+e.message+", Error stack="+e.stack
+            body: "Failed to process html based on parameters [responseType="+responseType+", htmlTemplateLocal="+htmlTemplateLocal+",htmlTemplateUrl="+htmlTemplateUrl+",htmlTemplateContent="+htmlTemplateContent+",options="+optionsforlog+",data="+dataforlog+"]"+". Error name="+e.name+", Error message: "+e.message+", Error stack="+e.stack
         };
     }   
 }
