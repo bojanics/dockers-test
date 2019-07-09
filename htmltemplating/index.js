@@ -21,7 +21,7 @@ const PARAM_NAME_OPTIONS = "options";
 
 const OPTION_PRINT_BACKGROUND = "printBackground";
 
-const APP_SETTING_ENVIRONMENT = "Environment";
+const APP_SETTING_ENVIRONMENT = "ENVIRONMENT";
 const ENVIRONMENT_PRODUCTION = "p";
 
 module.exports = async function (context, req) {
