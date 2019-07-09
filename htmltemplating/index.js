@@ -155,8 +155,12 @@ module.exports = async function (context, req) {
                         await page.goto("file:///"+htmlTemplate); 
                         await page.setContent(outputContent);
                     }
-                } else if (htmlContent!=null) {
+                } else {
                     context.log("...setting puppeteer content, content size = "+outputContent.length);
+                    if (htmlUrl!=null) {
+                        // The following line is written so that the relative paths are properly resolved...however, we don't need to wait for the page to load
+                        await page.goto(htmlUrl);
+                    }
                     await page.setContent(outputContent);
                 }                
                 if (responseType===RESPONSE_TYPE_PDF) {
