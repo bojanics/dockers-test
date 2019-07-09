@@ -16,7 +16,7 @@ const PARAM_NAME_HTML_URL = "htmlUrl";
 const PARAM_NAME_HTML_TEMPLATE = "htmlTemplate";
 const PARAM_NAME_HTML_CONTENT = "htmlContent";
 const PARAM_NAME_RESPONSE_TYPE = "responseType";
-const PARAM_NAME_DATA = "data";
+const PARAM_NAME_DATA = "data"; 
 const PARAM_NAME_OPTIONS = "options";
 
 const OPTION_PRINT_BACKGROUND = "printBackground";
@@ -74,7 +74,7 @@ module.exports = async function (context, req) {
         if (responseType===RESPONSE_TYPE_PDF && options[OPTION_PRINT_BACKGROUND]==null) {
             options[OPTION_PRINT_BACKGROUND] = true;
         }        
-
+        
         try {
             optionsforlog = JSON.stringify(options);
         } catch(e){
@@ -88,7 +88,19 @@ module.exports = async function (context, req) {
         context.log("html will be processed and result will be returned based on parameters [responseType="+responseType+", htmlTemplate="+htmlTemplate+",htmlUrl="+htmlUrl+",htmlContent="+htmlContent+",options="+optionsforlog+",data="+dataforlog+"]"+"...");
                 
         var outputContent = null;
+        var contentType = null;
         if ((htmlTemplate!=null || htmlUrl!=null || htmlContent!=null) && (responseType===RESPONSE_TYPE_HTML || responseType===RESPONSE_TYPE_IMAGE || responseType===RESPONSE_TYPE_PDF)) {
+            if (responseType===RESPONSE_TYPE_HTML) {
+                contentType = "text/html; charset=utf-8";
+            } else if (responseType===RESPONSE_TYPE_PDF) {
+                contentType = "application/pdf";
+            } else if (responseType===RESPONSE_TYPE_IMAGE) {
+                if (options.type==="jpeg") {
+                    contentType = "image/jpeg";
+                } else {
+                    contentType = "image/png";
+                }
+            }
             const engine = new Liquid();
             if (htmlTemplate!=null) {
                 context.log("...getting htmlTemplate "+htmlTemplate);
@@ -160,8 +172,10 @@ module.exports = async function (context, req) {
             context.log("HTML processing finished...");
             context.res = {
                 status: 200,
-                isRaw: true,
-                body: outputContent
+                body: outputContent,
+                headers: {
+                    "Content-Type": contentType
+                }
             };   
         } else {    
             context.res = {
