@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test HTML Liquid Template</title>
+    <style type="text/css">
+body {
+    margin: 2em 5em;
+    font-family:Georgia, "Times New Roman", Times, serif;
+}
+h1, legend {
+    font-family:Arial, Helvetica, sans-serif;
+}
+label, input, select {
+    display:block; 
+}
+input, select, textarea {
+    margin-bottom: 1em;
+   width: 99%;
+}
+fieldset {
+    margin-bottom: 2em;
+    padding: 1em;
+}
+fieldset fieldset {
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+input[type="checkbox"], input[type="radio"] {
+   width: 2%;
+}
+.registration-type input, .registration-type label {
+    display:inline-block;
+}
+    </style>
+</head>
+<body>
+{% for person in persons %} 
+  <fieldset> 
+    <legend>Personal details</legend> 
+    <div>
+        <img src="./img/{{ person.email }}.png" width='232' height='232'>
+    </div>
+    <div> 
+        <label>Id
+            <input id="id" name="id" type="text" placeholder="Unique Id" value="{{ person.id }}" disabled>
+        </label>
+    </div>
+    <div> 
+        <label>First Name
+            <input id="given-name" name="given-name" type="text" placeholder="First name only" value="{{ person.first_name }}"> 
+        </label>
+    </div>
+    <div> 
+        <label>Last Name
+            <input id="family-name" name="family-name" type="text" placeholder="Last name only" value="{{ person.last_name }}"> 
+        </label>
+    </div>
+    <div> 
+        <label>Date of Birth
+            <input id="dob" name="dob" type="text" value="{{ person.date_of_birth }}">
+        </label>
+    </div> 
+    <div> 
+        <label>Email 
+            <input id="email" name="email" type="email" placeholder="example@domain.com" value="{{ person.email }}">
+        </label> 
+    </div> 
+    <div> 
+        <label>Telephone 
+            <input id="phone" name="phone" type="tel" placeholder="Eg. +447000 000000" value="{{ person.phone }}">
+        </label> 
+    </div> 
+    <div>
+        <label>Shoesize
+            <input id="shoes" name="shoes" type="number" min="5" max="18" value="{{ person.shoe_size }}">
+        </label>
+    </div>
+  </fieldset>
+  <fieldset> 
+    <legend>Billing address</legend> 
+    <div> 
+        <label>Address 
+            <textarea id="address" name="address" rows="5">{{ person.address }}</textarea>
+        </label> 
+    </div> 
+    <div> 
+        <label>Post code 
+            <input id="postCode" name="postCode" type="text" value="{{ person.post_code }}">
+        </label> 
+    </div> 
+    <div> 
+        <label>Country 
+            <input id="country" name="country" list="country-names" type="text" value="{{ person.country }}"> 
+        </label> 
+    </div> 
+  </fieldset> 
+{% endfor %}             
+</body>
+</html>

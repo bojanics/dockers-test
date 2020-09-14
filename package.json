@@ -1,0 +1,16 @@
+{
+  "name": "stl2",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "func start",
+    "test": "echo \"No tests yet...\""
+  },
+  "dependencies": {
+    "liquidjs": "^8.3.0",
+    "node-fetch": "^2.6.0",
+    "puppeteer": "^1.18.0",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {}
+}
